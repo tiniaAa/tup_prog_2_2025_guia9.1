@@ -11,6 +11,7 @@ namespace Ejercicio1.Models
         List<Cuenta> Cuentas = new List<Cuenta>();
         List<Persona> Clientes = new List<Persona>();
 
+        public List<Cuenta> listacuentas { get { return Cuentas; } }
         public int CantidadCuntas 
         {
             get 
@@ -77,14 +78,27 @@ namespace Ejercicio1.Models
             {
                 Persona cliente = Clientes[idx];
 
-                return cliente;
+                return cliente; 
             }
             return null;
         }
-        public bool RestaurarCuenta(int numero, double salfo, DateTime fecha, Persona persona)
+        public bool RestaurarCuenta(int numero, double saldo, DateTime fecha, Persona persona)
         {
 
 
+            if (VerCuentaPorNumero(numero)==null)
+            {
+                Persona cliente = VerClientePorDNI(persona.DNI);
+                if (cliente==null)
+                {
+                    cliente = persona;
+                    Clientes.Add(cliente);
+
+                }
+                Cuenta cuentaRes = new Cuenta(numero,cliente,fecha,saldo);
+                Cuentas.Add(cuentaRes);
+                return true;
+            }
             return false;
         }
 

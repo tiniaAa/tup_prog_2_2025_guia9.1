@@ -26,5 +26,9 @@ namespace Ejercicio1.Models
             }
             return -1;
         }
+        public override string ToString()
+        {
+            return $"{Nombre}";
+        }
     }
 }
