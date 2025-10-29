@@ -85,6 +85,7 @@
             button4.TabIndex = 4;
             button4.Text = "4-Resguardar(backup)";
             button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // button5
             // 
@@ -94,10 +95,6 @@
             button5.TabIndex = 5;
             button5.Text = "5-Restaurar(Restore)";
             button5.UseVisualStyleBackColor = true;
-            // 
-            // saveFileDialog1
-            // 
-          
             // 
             // openFileDialog1
             // 
@@ -116,6 +113,7 @@
             Controls.Add(listBox1);
             Name = "Form1";
             Text = "Form1";
+            FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             ResumeLayout(false);
         }

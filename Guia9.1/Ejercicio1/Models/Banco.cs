@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace Ejercicio1.Models
 {
+    [Serializable]
     public  class Banco
     {
         List<Cuenta> Cuentas = new List<Cuenta>();
         List<Persona> Clientes = new List<Persona>();
 
         public List<Cuenta> listacuentas { get { return Cuentas; } }
+        public List<Persona> listPersonas { get { return Clientes; } }
         public int CantidadCuntas 
         {
             get 

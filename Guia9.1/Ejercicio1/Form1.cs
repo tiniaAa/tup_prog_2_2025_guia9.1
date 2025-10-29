@@ -1,5 +1,6 @@
 using Ejercicio1.Models;
 using System.Globalization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Ejercicio1
 {
@@ -9,10 +10,6 @@ namespace Ejercicio1
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
 
             Cuenta cuenta = banco.AgregarCuenta((int)1001, (int)28456789, "Ana Lopéz");
             cuenta.Saldo = 111.1;
@@ -28,6 +25,28 @@ namespace Ejercicio1
             cuenta5.Saldo = 123333.3;
 
 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            string path = "ejercicio1.dat";
+            FileStream fs = null;
+#pragma warning disable SYSLIB0011
+            BinaryFormatter bf = null;
+#pragma warning disable SYSLIB0011
+            if (File.Exists(path))
+            {
+                try
+                {
+                    fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+#pragma warning disable SYSLIB0011
+                    bf = new BinaryFormatter();
+                    banco = bf.Deserialize(fs) as Banco;
+#pragma warning disable SYSLIB0011
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+                finally { if (fs != null) { fs.Close(); } }
+            }
         }
 
         private void btnVerCuentas_Click(object sender, EventArgs e)
@@ -58,22 +77,22 @@ namespace Ejercicio1
                     string linea = sr.ReadLine().Trim(); ;
                     string[] cadena = linea.Split(';');
 
-                    int dni = Convert.ToInt32(cadena[0],cultura);
+                    int dni = Convert.ToInt32(cadena[0], cultura);
                     string nombre = cadena[1];
-                    int numeroDeCuenta = Convert.ToInt32(cadena[2],cultura);
+                    int numeroDeCuenta = Convert.ToInt32(cadena[2], cultura);
                     Double saldo = Convert.ToDouble(cadena[3]);
 
                     Cuenta cuenta = banco.VerCuentaPorNumero(numeroDeCuenta);
                     if (cuenta == null)
                     {
-                        cuenta=banco.AgregarCuenta(numeroDeCuenta, dni, nombre);
+                        cuenta = banco.AgregarCuenta(numeroDeCuenta, dni, nombre);
                         cuenta.Saldo = saldo;
                     }
                     else
                     {
                         cuenta.Saldo += saldo;
                     }
-                    
+
                 }
             }
 
@@ -97,8 +116,8 @@ namespace Ejercicio1
                         CuentasMasMil.Add(c); otra opcion, se puede achicar el codigo 
                     }
                 }*/
-                string path =saveFileDialog1.FileName;
-                FileStream fs = new FileStream(path,FileMode.Create,FileAccess.Write);
+                string path = saveFileDialog1.FileName;
+                FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.WriteLine("DNI; nombre; número de cuenta; saldo");
                 foreach (Cuenta c in banco.listacuentas)
@@ -107,16 +126,38 @@ namespace Ejercicio1
                     { sw.WriteLine($"{c.Titular.DNI};{c.Titular.Nombre};{c.Numero};{c.Saldo}"); }
                 }
 
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            FileStream fs = null;
+#pragma warning disable SYSLIB0011
+            BinaryFormatter bf = null;
+#pragma warning disable SYSLIB0011
+
+            try
+            {
+                string path = "ejercicio1.dat";
+                fs = new FileStream(path, FileMode.Open, FileAccess.Write);
+#pragma warning disable SYSLIB0011
+
+                bf = new BinaryFormatter();
+                bf.Serialize(fs, banco);
+#pragma warning disable SYSLIB0011
 
 
             }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            finally { if (fs != null) { fs.Close(); } }
+        }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
 
 
 
 
         }
-
-       
     }
 }
